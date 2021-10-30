@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "SynCrypt",
+    "version": "1.0",
+    "description": "Сквозное шифрование доступно каждому!",
+    "icons": {
+        "128": "128.png"
+    },
+    "browser_action": {
+		"default_icon": "128.png",
+		"default_popup": "popup.html",
+        "content_scripts": [
+            {
+                "matches": [ "<all_urls>" ],
+                "js": [ "jsbn.js", "jsbn2.js", "rng.js", "prng4.js", "rsa.js", "rsa2.js", "rsa3.js" ]
+            }
+        ]
+	},
+	"permissions": ["activeTab"]
+ }
