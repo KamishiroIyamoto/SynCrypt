@@ -17,9 +17,8 @@
             {
                 "matches": [ "<all_urls>" ],
                 "css": ["style.css"],
-                "js": [ "jsbn.js", "jsbn2.js", "rng.js", "prng4.js", "rsa.js", "rsa2.js", "rsa3.js" ]
+                "js": [ "jsbn.js", "jsbn2.js", "rng.js", "prng4.js", "rsa.js", "rsa2.js", "OldRsa3.js" ]
             }
         ]
-	},
-	"permissions": ["activeTab"]
+	}
  }

@@ -1,3 +1,93 @@
-function parseBigInt(a,b){return new BigInteger(a,b)}function linebrk(a,b){for(var c="",e=0;e+b<a.length;)c+=a.substring(e,e+b)+"\n",e+=b;return c+a.substring(e,a.length)}function byte2Hex(a){return 16>a?"0"+a.toString(16):a.toString(16)}
-function pkcs1pad2(a,b){if(b<a.length+11)return alert("Message too long for RSA"),null;for(var c=[],e=a.length-1;0<=e&&0<b;){var d=a.charCodeAt(e--);128>d?c[--b]=d:127<d&&2048>d?(c[--b]=d&63|128,c[--b]=d>>6|192):(c[--b]=d&63|128,c[--b]=d>>6&63|128,c[--b]=d>>12|224)}c[--b]=0;e=new SecureRandom;for(d=[];2<b;){for(d[0]=0;0==d[0];)e.nextBytes(d);c[--b]=d[0]}c[--b]=2;c[--b]=0;return new BigInteger(c)}function RSAKey(){this.n=null;this.e=0;this.coeff=this.dmq1=this.dmp1=this.q=this.p=this.d=null}
-function RSASetPublic(a,b){null!=a&&null!=b&&0<a.length&&0<b.length?(this.n=parseBigInt(a,16),this.e=parseInt(b,16)):alert("Invalid RSA public key")}function RSADoPublic(a){return a.modPowInt(this.e,this.n)}function RSAEncrypt(a){a=pkcs1pad2(a,this.n.bitLength()+7>>3);if(null==a)return null;a=this.doPublic(a);if(null==a)return null;a=a.toString(16);return 0==(a.length&1)?a:"0"+a}RSAKey.prototype.doPublic=RSADoPublic;RSAKey.prototype.setPublic=RSASetPublic;RSAKey.prototype.encrypt=RSAEncrypt;
+function parseBigInt(str,r) {
+    return new BigInteger(str,r);
+  }
+  
+  function linebrk(s,n) {
+    var ret = "";
+    var i = 0;
+    while(i + n < s.length) {
+      ret += s.substring(i,i+n) + "\n";
+      i += n;
+    }
+    return ret + s.substring(i,s.length);
+  }
+  
+  function byte2Hex(b) {
+    if(b < 0x10)
+      return "0" + b.toString(16);
+    else
+      return b.toString(16);
+  }
+  
+  function pkcs1pad2(s,n) {
+    if(n < s.length + 11) { 
+      alert("Message too long for RSA");
+      return null;
+    }
+    var ba = new Array();
+    var i = s.length - 1;
+    while(i >= 0 && n > 0) {
+      var c = s.charCodeAt(i--);
+      if(c < 128) { 
+        ba[--n] = c;
+      }
+      else if((c > 127) && (c < 2048)) {
+        ba[--n] = (c & 63) | 128;
+        ba[--n] = (c >> 6) | 192;
+      }
+      else {
+        ba[--n] = (c & 63) | 128;
+        ba[--n] = ((c >> 6) & 63) | 128;
+        ba[--n] = (c >> 12) | 224;
+      }
+    }
+    ba[--n] = 0;
+    var rng = new SecureRandom();
+    var x = new Array();
+    while(n > 2) { 
+      x[0] = 0;
+      while(x[0] == 0) rng.nextBytes(x);
+      ba[--n] = x[0];
+    }
+    ba[--n] = 2;
+    ba[--n] = 0;
+    return new BigInteger(ba);
+  }
+  
+  function RSAKey() {
+    this.n = null;
+    this.e = 0;
+    this.d = null;
+    this.p = null;
+    this.q = null;
+    this.dmp1 = null;
+    this.dmq1 = null;
+    this.coeff = null;
+  }
+  
+  function RSASetPublic(N,E) {
+    if(N != null && E != null && N.length > 0 && E.length > 0) {
+      this.n = parseBigInt(N,16);
+      this.e = parseInt(E,16);
+    }
+    else
+      alert("Invalid RSA public key");
+  }
+  
+  function RSADoPublic(x) {
+    return x.modPowInt(this.e, this.n);
+  }
+  
+  function RSAEncrypt(text) {
+    var m = pkcs1pad2(text,(this.n.bitLength()+7)>>3);
+    if(m == null) return null;
+    var c = this.doPublic(m);
+    if(c == null) return null;
+    var h = c.toString(16);
+    if((h.length & 1) == 0) return h; else return "0" + h;
+  }
+  
+  RSAKey.prototype.doPublic = RSADoPublic;
+  
+  RSAKey.prototype.setPublic = RSASetPublic;
+  RSAKey.prototype.encrypt = RSAEncrypt;
