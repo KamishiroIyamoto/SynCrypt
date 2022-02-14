@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SynCrypt</title>
+    <meta charset="utf-8" />
+    <script language="JavaScript" type="text/javascript" src="jsbn.js"></script>
+    <script language="JavaScript" type="text/javascript" src="jsbn2.js"></script>
+    <script language="JavaScript" type="text/javascript" src="prng4.js"></script>
+    <script language="JavaScript" type="text/javascript" src="rng.js"></script>
+    <script language="JavaScript" type="text/javascript" src="rsa.js"></script>
+    <script language="JavaScript" type="text/javascript" src="rsa2.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <h1>SynCrypt</h1>
+    <br>
+    <p>Сквозное шифрование доступно каждому!</p>
+    <br>
+    <form name="rsatest">
+      <label class="custom-file-upload">
+        <input type="file" id="file"/>
+        <span id="span">Загрузите файл</span>
+      </label>
+      <br><br><br>
+      <div class="flex">
+        <input type="button" id="enc" value="Зашифровать">
+        <input type="button" id="dec" value="Расшифровать">
+      </div>
+      <textarea name="ciphertext" rows=4 cols=70 style="display: none;"></textarea>
+
+      <textarea name="n" type="text" style="display: none;"></textarea>
+      <input name="e" type="text" value="3" style="display: none;">
+      <textarea name="d" type="text" style="display: none;"></textarea>
+
+      <script language="JavaScript" type="text/javascript" src="rsa3.js"></script>
+  </body>
+</html>

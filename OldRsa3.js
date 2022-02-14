@@ -38,7 +38,17 @@ function download(data, filename, type) {
     }
     reader.onload = function() {
       let view = new Uint8Array(reader.result);
-      if(view.byteLength > 500) {
+      if(view.byteLength <= 500) {
+        var t = new Uint8Array(501);
+        for(var i = 0; i < 501; i++)
+        {
+          if(i < view.byteLength-1)
+            t[i] = view[i];
+          else
+            t[i] = 32;
+        }
+          view = t;
+      }
         let arr = new Array();
         let index = 0;
         var res;
@@ -59,13 +69,7 @@ function download(data, filename, type) {
           if(res) 
             document.rsatest.ciphertext.value = document.rsatest.ciphertext.value + "\n" + linebrk(res, 64);
         });
-      }
-      else {
-        res = rsa.encrypt(reader.result);
-        if(res)
-          document.rsatest.ciphertext.value = linebrk(res, 64);
-      }
-      download(file.name.split(".").pop() + "\n" + document.rsatest.n.value + "\n" + document.rsatest.d.value +
+        download(file.name.split(".").pop() + "\n" + document.rsatest.n.value + "\n" + document.rsatest.d.value +
         document.rsatest.ciphertext.value, file.name.split(".")[0] + ".sc", Text);
     }
   }
@@ -93,10 +97,7 @@ function download(data, filename, type) {
       var res;
       let counter = 0;
       let buf = "";
-      let element = "";
       let temp = "";
-      
-      if(ave.length > 1039) {
         let str = ave.split("\n");
         str.forEach((element) => {
           buf = buf + element + "\n";
@@ -113,17 +114,20 @@ function download(data, filename, type) {
             }
           }
         });
-      }
-      else {
-        res = rsa.decrypt(ave);
-        if(res == null) {
-          temp = "*** Invalid Ciphertext ***";
-          console.log("*** Invalid Ciphertext ***");
-        }
-        else
-          temp = res;
-      }
+
       let tarr = temp.split(" ");
+      if(tarr[tarr.length - 1] == "" || tarr[tarr.length - 2] == "32" && tarr[tarr.length - 3] == "32")
+      {
+        let spaseIndex = 0;
+        for(var i = tarr.length - 2; i >= 0; i--)
+        {
+          if(tarr[i] != "32"){
+            spaseIndex = i;
+            break;
+          }
+        }
+        tarr = tarr.slice(0, spaseIndex + 1);
+      }
       let ab = new ArrayBuffer(tarr.length);
       let view = new Uint8Array(ab);
       for(let i = 0; i < tarr.length; i++) {
